@@ -10,8 +10,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {Application.class, SecureApplicationTest.TestConfiguration.class})
+@SpringBootTest(classes = {Application.class})
 public class SecureApplicationTest {
     @Autowired
     private SecureService service;
@@ -36,7 +34,7 @@ public class SecureApplicationTest {
         AuthenticationManager manager = this.context
                 .getBean(AuthenticationManager.class);
         this.authentication = manager.authenticate(
-                new UsernamePasswordAuthenticationToken("user", "password")
+                new UsernamePasswordAuthenticationToken("spc", "199602")
         );
     }
 
@@ -66,10 +64,5 @@ public class SecureApplicationTest {
     public void denied() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(this.authentication);
         Assertions.assertThat("Goodbye World").isEqualTo(this.service.denied());
-    }
-
-    @PropertySource("classpath:test.properties")
-    @Configuration
-    protected static class TestConfiguration {
     }
 }
