@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.Base64Utils;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,7 +36,8 @@ public class Log4j2ApplicationTest {
 
     @Test
     public void validateLoggerEndpoint() throws Exception {
-        this.mvc.perform(MockMvcRequestBuilders.get("/loggers/org.apache.coyote.http11.Http11NioProtocol"))
+        this.mvc.perform(MockMvcRequestBuilders.get("/loggers/org.apache.coyote.http11.Http11NioProtocol")
+                .header("Authorization", "Basic " + Base64Utils.encodeToString("spc:199602".getBytes())))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(
                         Matchers.equalTo("{\"configuredLevel\":\"WARN\",\"effectiveLevel\":\"WARN\"}"))
