@@ -23,7 +23,7 @@ public class Log4j2ApplicationTest {
     private static final Logger logger = LogManager.getLogger(Log4j2ApplicationTest.class);
 
     @Rule
-    public OutputCapture output=new OutputCapture();
+    public OutputCapture output = new OutputCapture();
 
     @Autowired
     private MockMvc mvc;

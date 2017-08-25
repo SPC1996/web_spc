@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keessi.web.entity.Flight;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,36 +40,22 @@ public class OAuthApplicationTest {
     }
 
     @Test
-    @Ignore
     public void everythingIsSecuredByDefault() throws Exception {
-        this.mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaTypes.HAL_JSON))
+        this.mvc.perform(MockMvcRequestBuilders.get("/api/").accept(MediaTypes.HAL_JSON))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andDo(MockMvcResultHandlers.print());
-        this.mvc.perform(MockMvcRequestBuilders.get("flights").accept(MediaTypes.HAL_JSON))
+        this.mvc.perform(MockMvcRequestBuilders.get("/api/flights").accept(MediaTypes.HAL_JSON))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andDo(MockMvcResultHandlers.print());
-        this.mvc.perform(MockMvcRequestBuilders.get("/flights/1").accept(MediaTypes.HAL_JSON))
+        this.mvc.perform(MockMvcRequestBuilders.get("/api/flights/1").accept(MediaTypes.HAL_JSON))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
-                .andDo(MockMvcResultHandlers.print());
-        this.mvc.perform(MockMvcRequestBuilders.get("/alps").accept(MediaTypes.HAL_JSON))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    public void accessingRootUriPossibleWithUserAccount() throws Exception {
-        String header = "Basic " +
-                new String(Base64.getEncoder().encode("spc:199602".getBytes()));
-        this.mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaTypes.HAL_JSON).header("Authorization", header))
-                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaTypes.HAL_JSON.toString() + ";charset=UTF-8"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
     public void useAppSecretsPlusUserAccountToGetBearerToken() throws Exception {
         String header = "Basic " +
-                new String(Base64.getEncoder().encode("foo:bar".getBytes()));
+                new String(Base64.getEncoder().encode("my_trusted_client:".getBytes()));
         MvcResult result = this.mvc
                 .perform(MockMvcRequestBuilders.post("/oauth/token")
                         .header("Authorization", header)
@@ -85,7 +70,7 @@ public class OAuthApplicationTest {
                 .readValue(result.getResponse().getContentAsString(), Map.class)
                 .get("access_token");
         MvcResult flightAction = this.mvc
-                .perform(MockMvcRequestBuilders.get("/flights/1").accept(MediaTypes.HAL_JSON).header("Authorization", "Bearer " + accessToken))
+                .perform(MockMvcRequestBuilders.get("/api/flights/1").accept(MediaTypes.HAL_JSON).header("Authorization", "Bearer " + accessToken))
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaTypes.HAL_JSON.toString() + ";charset=UTF-8"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())

@@ -36,15 +36,6 @@ public class OAuthActuatorApplicationTest {
     }
 
     @Test
-    @Ignore
-    public void homePageSecuredByDefault() throws Exception {
-        this.mvc.perform(get("/"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(header().string("WWW-Authenticate", containsString("Bearer")))
-                .andDo(print());
-    }
-
-    @Test
     public void healthWithBasicAuthorization() throws Exception {
         this.mvc.perform(get("/health")
                 .header("Authorization", "Basic " + Base64Utils.encodeToString("spc:199602".getBytes())))

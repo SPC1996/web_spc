@@ -1,4 +1,4 @@
-package com.keessi.web.controller;
+package com.keessi.web.controller.api;
 
 import com.keessi.web.entity.News;
 import com.keessi.web.mapper.NewsMapper;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/news")
+@RequestMapping("/api/news")
 public class NewsController {
     @Autowired
     private NewsService newsService;

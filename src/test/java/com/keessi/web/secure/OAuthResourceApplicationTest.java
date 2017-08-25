@@ -36,25 +36,25 @@ public class OAuthResourceApplicationTest {
 
     @Test
     public void homePageAvailable() throws Exception {
-        this.mvc.perform(get("/").accept(MediaTypes.HAL_JSON))
-                .andExpect(status().isOk())
+        this.mvc.perform(get("/api/").accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
 
     @Test
     public void flightsSecureByDefault() throws Exception {
-        this.mvc.perform(get("/flights").accept(MediaTypes.HAL_JSON))
+        this.mvc.perform(get("/api/flights").accept(MediaTypes.HAL_JSON))
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
-        this.mvc.perform(get("/flights/1").accept(MediaTypes.HAL_JSON))
+        this.mvc.perform(get("/api/flights/1").accept(MediaTypes.HAL_JSON))
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
 
     @Test
     public void profileAvailable() throws Exception {
-        this.mvc.perform(get("/profile").accept(MediaTypes.HAL_JSON))
-                .andExpect(status().isOk())
+        this.mvc.perform(get("/api/profile").accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
 }
